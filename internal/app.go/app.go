@@ -3,6 +3,8 @@ package app
 import (
 	"fmt"
 	"net/http"
+	"os"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -15,7 +17,11 @@ import (
 func Start() {
 	r := InitRouter()
 
-	port := 8000
+	portEnv := os.Getenv("PORT")
+	port, _ := strconv.ParseInt(portEnv, 10, 64)
+	if portEnv == "" {
+		port = 8000
+	}
 	logrus.Infof("goplay plugin api is listening on port :%v", port)
 	http.ListenAndServe(fmt.Sprintf(":%v", port), r)
 }
